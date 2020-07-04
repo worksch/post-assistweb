@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>iCenter & 邮寄助手</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body class="hold-transition login-page">
+<div class="container">
+  <div class="card card-primary">
+    <div class="card-header">
+      <h3 class="card-title">登记居住地址，用于接收邮寄的工具包</h3>
+    </div>
+    <form action="#" method="post" role="form">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>姓名</label>              
+              <input id="name" type="text" class="form-control" placeholder="姓名">
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>学号</label>
+              <input id="suid" type="text" class="form-control" placeholder="学号">
+            </div>
+          </div>
+        </div>
+        <!-- 院系，班级 -->
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>电话</label>
+              <input id="phone" type="phone" class="form-control" placeholder="电话">
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>邮编</label>
+              <input id="zipcode" type="text" class="form-control" placeholder="邮编">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>邮寄地址</label>              
+              <input id="address" type="text" class="form-control" placeholder="国外填写英文地址">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="icheck-primary">
+              <label for="remember"></label>
+            </div>
+          </div>
+          <!-- /.col -->
+          <div class="col-6">
+            <!-- <button type="submit" class="btn btn-primary btn-block" onclick="formValidator()">提交 & Submit</button> -->
+            <div id="submit" class="btn btn-primary btn-block">提交 & Submit</div>
+          </div>
+          <!-- /.col -->
+        </div>
+      </div>
+    </form>
+    <!-- /.login-card-body -->
+  </div>
+</div>
+<!-- /.login-box -->
+
+<!-- jQuery -->
+<script src="/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="/dist/js/adminlte.min.js"></script>
+<script type="text/javascript">
+  $('#submit').click(function () {
+    var name = get('name').val();
+    var suid = get('suid').val();
+    var phone = get('phone').val();
+    var zipcode = get('zipcode').val();
+    var address = get('address').val();
+
+    if (isEmpty(name)) {
+      get('name').focus();
+      return false;
+    }
+    if (isEmpty(suid)) {
+      get('suid').focus();
+      return false;
+    }
+    if (isEmpty(phone)) {
+      get('phone').focus();
+      return false;
+    }
+    if (isEmpty(zipcode)) {
+      get('zipcode').focus();
+      return false;
+    }
+    if (isEmpty(address)) {
+      get('address').focus();
+      return false;
+    }
+
+    var msg = "姓名：" + name + "\n";
+    msg += "学号：" + suid + "\n";
+    msg += "电话：" + phone + "\n";
+    msg += "邮编：" + zipcode + "\n";
+    msg += "邮寄地址：" + address + "\n";
+
+    msg += "请确认信息是否正确，点击“确定”进行信息提交。"
+
+    if (confirm(msg)) {
+      var stuObj = {"name": name, "suid": suid, "phone": phone,
+                "zipcode":zipcode,"address":address}
+      $.ajax({
+        url: "http://127.0.0.1:8080/v1/student/address/",
+        type: "post", dataType: "json", crossDomain: true, 
+        data: JSON.stringify(stuObj),
+        success: function (data) {
+          alert('报名成功！')
+        }
+      });
+    } else {
+      alert("修改");
+    }
+  })
+
+  function isEmpty(v) {
+    if (v == null | v.length == 0) {      
+      return true;
+    }
+    else
+      return false;
+  }
+  function get(id) {
+    return $('#'+id);
+  }
+</script
+</body>
+</html>
