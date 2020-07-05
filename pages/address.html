@@ -30,36 +30,51 @@
           <div class="col-sm-6">
             <div class="form-group">
               <label>姓名</label>              
-              <input id="name" type="text" class="form-control" placeholder="姓名">
+              <input id="name" type="text" class="form-control" placeholder="姓名" value="任在超">
             </div>
           </div>
           <div class="col-sm-6">
             <div class="form-group">
               <label>学号</label>
-              <input id="suid" type="text" class="form-control" placeholder="学号">
+              <input id="suid" type="text" class="form-control" placeholder="学号" value="2017011762">
             </div>
           </div>
         </div>
-        <!-- 院系，班级 -->
         <div class="row">
           <div class="col-sm-6">
             <div class="form-group">
-              <label>电话</label>
-              <input id="phone" type="phone" class="form-control" placeholder="电话">
+              <label>收货人姓名</label>
+              <input id="delivery_name" type="phone" class="form-control" placeholder="收货人姓名" value="魏绍飞">
             </div>
           </div>
           <div class="col-sm-6">
             <div class="form-group">
-              <label>邮编</label>
-              <input id="zipcode" type="text" class="form-control" placeholder="邮编">
+              <label>收货人电话</label>
+              <input id="delivery_phone" type="text" class="form-control" placeholder="收货人电话" value="13001997216">
             </div>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-12">
             <div class="form-group">
-              <label>邮寄地址</label>              
-              <input id="address" type="text" class="form-control" placeholder="国外填写英文地址">
+              <label>收货人邮编</label>
+              <input id="zipcode" type="text" class="form-control" placeholder="收货人邮编" value="100084">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>收货地址(中文)</label>              
+              <input id="address_cn" type="text" class="form-control" placeholder="国内只需填写中文地址" value="北京市海淀区清华大学李兆科技大楼B354">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>收货地址(英文)</label>              
+              <input id="address_en" type="text" class="form-control" placeholder="国外必需填写英文地址">
             </div>
           </div>
         </div>
@@ -93,48 +108,65 @@
   $('#submit').click(function () {
     var name = get('name').val();
     var suid = get('suid').val();
-    var phone = get('phone').val();
+    var delivery_name = get('delivery_name').val();
+    var delivery_phone = get('delivery_phone').val();
     var zipcode = get('zipcode').val();
-    var address = get('address').val();
+    var address_cn = get('address_cn').val();
+    var address_en = get('address_en').val();
 
     if (isEmpty(name)) {
+      alert('学生姓名不能为空')
       get('name').focus();
       return false;
     }
     if (isEmpty(suid)) {
+      alert('学生学号不能为空')
       get('suid').focus();
       return false;
     }
-    if (isEmpty(phone)) {
-      get('phone').focus();
+    if (isEmpty(delivery_name)) {
+      alert('收货人姓名不能为空')
+      get('delivery_name').focus();
+      return false;
+    }
+    if (isEmpty(delivery_phone)) {
+      alert('收货人电话不能为空')
+      get('delivery_phone').focus();
       return false;
     }
     if (isEmpty(zipcode)) {
+      alert('收货人邮编不能为空')
       get('zipcode').focus();
       return false;
     }
-    if (isEmpty(address)) {
-      get('address').focus();
+    if (isEmpty(address_cn)) {
+      alert('收货人地址不能为空')
+      get('address_cn').focus();
       return false;
     }
 
     var msg = "姓名：" + name + "\n";
     msg += "学号：" + suid + "\n";
-    msg += "电话：" + phone + "\n";
+    msg += "收货人姓名：" + delivery_name + "\n";
+    msg += "收货人电话：" + delivery_phone + "\n";
     msg += "邮编：" + zipcode + "\n";
-    msg += "邮寄地址：" + address + "\n";
+    msg += "邮寄地址(中文)：" + address_cn + "\n";
+    msg += "邮寄地址(英文)：" + address_en + "\n";
 
-    msg += "请确认信息是否正确，点击“确定”进行信息提交。"
+    msg += "\n请确认信息是否正确，点击“确定”进行信息提交。"
 
     if (confirm(msg)) {
-      var stuObj = {"name": name, "suid": suid, "phone": phone,
-                "zipcode":zipcode,"address":address}
+      var stuObj = {"name": name, "suid": suid, "delivery_name": delivery_name,
+                  "delivery_phone": delivery_phone, "zipcode":zipcode,
+                  "address_cn":address_cn, "address_en": address_en}
       $.ajax({
         url: "http://127.0.0.1:8080/v1/student/address/",
-        type: "post", dataType: "json", crossDomain: true, 
+        type: "PUT", dataType: "json", crossDomain: true, 
         data: JSON.stringify(stuObj),
         success: function (data) {
-          alert('报名成功！')
+          if (data.code == 200) {
+            alert("您的信息以经提交成功，感谢您对我们支持。");
+          }
         }
       });
     } else {

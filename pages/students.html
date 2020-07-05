@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>iCenter & 学生列表</title>
+  <title>iCenter & 学生列表1</title>
   <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
@@ -22,10 +23,13 @@
   <link rel="stylesheet" href="/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
   <!-- Daterange picker -->
   <link rel="stylesheet" href="/plugins/daterangepicker/daterangepicker.css">
+  <!-- Daterange picker -->
+  <link rel="stylesheet" href="/plugins/daterangepicker/daterangepicker.css">
   <!-- summernote -->
   <link rel="stylesheet" href="/plugins/summernote/summernote-bs4.css">
-  <!-- Google Font: Source Sans Pro -->
-  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+  <link rel="stylesheet" type="text/css" href="/dist/css/fileinput.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/dist/css/jquery.dataTables.min.css">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -161,7 +165,6 @@
            style="opacity: .8">
       <span class="brand-text font-weight-light">AdminLTE 3</span>
     </a>
-
     <!-- Sidebar -->
     <div class="sidebar">
       <!-- Sidebar user panel (optional) -->
@@ -173,7 +176,6 @@
           <a href="#" class="d-block">Alexander Pierce</a>
         </div>
       </div>
-
       <!-- Sidebar Menu -->
       <div id="sidebar"></div>
       <!-- /.sidebar-menu -->
@@ -188,7 +190,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Dashboard</h1>
+            <h1 class="m-0 text-dark">学生列表</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -204,15 +206,14 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-        <!-- Small boxes (Stat box) -->
-        <div class="row">
-          <!-- ./col -->
-        </div>
-        <!-- /.row -->
         <!-- Main row -->
         <div class="row">
           <!-- Left col -->
-          <section class="col-lg-7 connectedSortable">
+          <section class="col-lg-12 connectedSortable">
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="info_list" class="table table-hover"></table>
+            </div><!-- /.box-header -->
           </section>
           <!-- /.Left col -->
         </div>
@@ -238,6 +239,30 @@
 </div>
 <!-- ./wrapper -->
 
+
+<!-- 背景更改弹出框开始 -->
+<div class="modal fade" id="excelAttachmentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <!--弹出对话框标题部分-->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="关闭"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">控制台属性...</h4>
+            </div>
+            <!--弹出对话框内容部分-->
+            <div class="modal-body">
+                <form role="form">
+                    <div class="form-group">
+                        <label for="excelAttachment" class="control-label">Excel信息导入</label>
+                        <input id="excelAttachment" class="file" type="file" name="excelAttachment">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 背景更改弹出框结束 -->
+
 <!-- jQuery -->
 <script src="/plugins/jquery/jquery.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
@@ -248,8 +273,6 @@
 </script>
 <!-- Bootstrap 4 -->
 <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- ChartJS -->
-<script src="/plugins/chart.js/Chart.min.js"></script>
 <!-- Sparkline -->
 <script src="/plugins/sparklines/sparkline.js"></script>
 <!-- JQVMap -->
@@ -260,22 +283,91 @@
 <!-- daterangepicker -->
 <script src="/plugins/moment/moment.min.js"></script>
 <script src="/plugins/daterangepicker/daterangepicker.js"></script>
-<!-- Tempusdominus Bootstrap 4 -->
-<script src="/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-<!-- Summernote -->
 <script src="/plugins/summernote/summernote-bs4.min.js"></script>
-<!-- overlayScrollbars -->
 <script src="/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <!-- AdminLTE App -->
-<script src="/dist/js/adminlte.js"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="/dist/js/pages/dashboard.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="/dist/js/demo.js"></script>
+<script type="text/javascript" language="javascript" src="/dist/js/adminlte.js"></script>
+<script type="text/javascript" src="/dist/js/fileinput.js"></script>
+
+<!-- DataTables -->
+<script type="text/javascript" src="/dist/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="/dist/js/distpicker/distpicker.min.js"></script>
+<script type="text/javascript" src="/dist/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="/dist/js/jszip.min.js"></script>
+<script type="text/javascript" src="/dist/js/buttons.html5.min.js"></script>
+
 <script type="text/javascript">
   $(function () {
     $('#sidebar').load('/pages/sidebar.html');
-  })
+  });
 </script>
+
+<script type="text/javascript">
+  $('#fileImport').click(function () {
+    $("#excelAttachmentModal").modal('show');
+  });
+
+</script>
+
+<script type="text/javascript">
+  $('#excelAttachment').fileinput({
+        language: 'zh', uploadUrl: '/v1/student/import/', // you must set a valid URL here else you will get an error
+        allowedFileExtensions: ['xlsx'], enctype : 'multipart/form-data',
+        overwriteInitial: false, maxFileSize: 1000*1000, maxFilesNum: 1, 
+        dropZoneEnabled: false, autoReplace: true,
+        uploadExtraData:function (){
+            var jsonData = {};
+            //jsonData["token"] = id;
+            return jsonData;
+        },
+        slugCallback: function (filename) {
+            return filename.replace('(', '_').replace(']', '_').replace('[', '_').replace(')', '_');
+        }
+    }).on('fileerror', function(event, data, msg) {
+        //异步上传返回结果处理
+        console.log("fileerror");
+    }).on("upload", function(event, files) {
+        alert("filebatchselected");
+    }).on('fileuploaded', function (event, data, previewId, index) {
+        
+    });
+
+    $('#info_list').DataTable({
+      //paging: true, ordering: true, searching: true, processing: true,
+      ajax: {url: "/v1/student/address/", type: "GET", success: function(data) {
+        $('#info_list').dataTable().fnAddData(data);
+      }},
+      // 定义列: 序号, 姓名, 学号, 收货姓名, 收货电话, 收货地址
+      columns: [
+          {title: '序号', width:'8%', data: "id"},
+          {title: '姓名', width:'12%', data: "student_name"}, 
+          {title: '学号', width:'12%', data: "student_id"}, 
+          {title: '收货姓名', width:'12%', data: "delivery_name"}, 
+          {title: '收货电话', width:'12%', data: "delivery_phone"}, 
+          {title: '收货地址', data: "delivery_address_cn"}
+      ],
+      language: {//自定义语言提示
+        paginate: {
+          previous: "<<上一页",
+          next: "下一页>>"},
+      },
+      dom: 'Bfrtip',
+      buttons: [
+        {
+          extend: 'excelHtml5',
+          text: '导出Excel',
+          className: 'btn btn-primary',
+        },
+        {
+          extend: 'copy',
+          text: '导入Excel',
+          className: 'btn btn-success',
+          action: function () {
+            $("#excelAttachmentModal").modal('show');
+          }
+        },
+		  ]
+    });
+</script
 </body>
 </html>
